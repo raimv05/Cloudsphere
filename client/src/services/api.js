@@ -12,9 +12,8 @@ const getApiBaseUrl = () => {
     // For Render: assumes backend is at same domain pattern (e.g., cloudsphere-backend)
     const host = window.location.hostname;
     if (host.includes('onrender.com')) {
-      // Replace frontend service name with backend service name
-      const backendUrl = host.replace(/^[^-]*/, 'cloudsphere-backend');
-      return `https://${backendUrl}`;
+      // Use the backend URL for Render deployments
+      return 'https://cloudsphere-backend.onrender.com';
     }
   }
   
