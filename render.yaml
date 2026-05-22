@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: cloudsphere-backend
+    env: node
+    plan: free
+    buildCommand: cd server && npm install && npm run build 2>/dev/null || true
+    startCommand: cd server && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+      - key: MONGO_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+
+  - type: static
+    name: cloudsphere-frontend
+    buildCommand: cd client && npm install && npm run build
+    staticPublicPath: client/dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://cloudsphere-backend.onrender.com
