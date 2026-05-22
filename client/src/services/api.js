@@ -1,8 +1,30 @@
 import axios from 'axios';
 
+// Determine API base URL
+const getApiBaseUrl = () => {
+  // Use environment variable if set (via Render/deployment)
+  if (import.meta.env.VITE_API_URL) {
+    return import.meta.env.VITE_API_URL;
+  }
+  
+  // In production (deployed to Render/Vercel), auto-detect backend URL
+  if (typeof window !== 'undefined' && window.location.hostname !== 'localhost') {
+    // For Render: assumes backend is at same domain pattern (e.g., cloudsphere-backend)
+    const host = window.location.hostname;
+    if (host.includes('onrender.com')) {
+      // Replace frontend service name with backend service name
+      const backendUrl = host.replace(/^[^-]*/, 'cloudsphere-backend');
+      return `https://${backendUrl}`;
+    }
+  }
+  
+  // Default to localhost for local development
+  return 'http://localhost:5000';
+};
+
 // Create custom Axios instance
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000',
+  baseURL: getApiBaseUrl(),
   headers: {
     'Content-Type': 'application/json'
   }
